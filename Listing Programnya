@@ -1,0 +1,70 @@
+Public Class Form1
+
+    ' Fungsi untuk mengenkripsi teks dengan menambah nilai ASCII sebesar 3
+    Private Function EncryptAscii(ByVal text As String) As String
+        Dim result As String = ""
+        For Each c As Char In text
+            Dim shiftedChar As Char = Chr(Asc(c) + 3) ' Menambah nilai ASCII sebanyak 3
+            result &= shiftedChar
+        Next
+        Return result
+    End Function
+
+    ' Fungsi untuk mendekripsi teks dengan mengurangi nilai ASCII sebesar 3
+    Private Function DecryptAscii(ByVal text As String) As String
+        Dim result As String = ""
+        For Each c As Char In text
+            Dim shiftedChar As Char = Chr(Asc(c) - 3) ' Mengurangi nilai ASCII sebanyak 3
+            result &= shiftedChar
+        Next
+        Return result
+    End Function
+
+    ' Tombol untuk membuka dan langsung mendekripsi file
+    Private Sub BtnOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnOpen.Click
+        Dim OpenFileDialog1 As New OpenFileDialog
+        OpenFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+        If OpenFileDialog1.ShowDialog = DialogResult.OK Then
+            Dim fileContent As String = My.Computer.FileSystem.ReadAllText(OpenFileDialog1.FileName)
+            Dim decryptedContent As String = DecryptAscii(fileContent) ' Mendekripsi isi file
+            TextBox1.Text = decryptedContent
+            Label1.Text = "File Opened and Decrypted: " & OpenFileDialog1.FileName
+        End If
+    End Sub
+
+    ' Tombol untuk mengenkripsi dan menyimpan file
+    Private Sub BtnSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnSave.Click
+        Dim SaveFileDialog1 As New SaveFileDialog
+        SaveFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+        If SaveFileDialog1.ShowDialog = DialogResult.OK Then
+            ' Mengambil isi dari TextBox dan mengenkripsi sebelum disimpan
+            Dim encryptedContent As String = EncryptAscii(TextBox1.Text)
+            My.Computer.FileSystem.WriteAllText(SaveFileDialog1.FileName, encryptedContent, False)
+            Label1.Text = "File Saved (Encrypted): " & SaveFileDialog1.FileName
+        End If
+    End Sub
+
+    ' Tombol untuk membersihkan teks di TextBox
+    Private Sub BtnClear_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnClear.Click
+        TextBox1.Clear()
+        Label1.Text = "..."
+    End Sub
+
+    ' Tombol untuk menutup aplikasi
+    Private Sub BtnExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnExit.Click
+        Me.Close()
+    End Sub
+
+    ' Tombol untuk membuka file tanpa mendekripsi
+    Private Sub Button5_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button5.Click
+        Dim OpenFileDialog1 As New OpenFileDialog
+        OpenFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+        If OpenFileDialog1.ShowDialog = DialogResult.OK Then
+            ' Membaca isi file dan menampilkan langsung di TextBox tanpa dekripsi
+            Dim fileContent As String = My.Computer.FileSystem.ReadAllText(OpenFileDialog1.FileName)
+            TextBox1.Text = fileContent
+            Label1.Text = "File Opened (Without Decryption): " & OpenFileDialog1.FileName
+        End If
+    End Sub
+
+End Class
